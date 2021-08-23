@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 const BookList = ({bookList}) => {
     return (
         <div className="page">
             <h2>Book List</h2>
             <div className="card-div">
-            {bookList.books.map((book,index)=>{
+             {bookList.books.map((book,index)=>{
                 return (
-                    <Link to="/1 ">
+                    
                         <div className="card" key={index}>
                         <div className="img-div">
                             <img />
@@ -16,14 +17,22 @@ const BookList = ({bookList}) => {
                         <h3>{book.title}</h3>
                         <div className="card-line"></div>
                         <h5>Written by {book.author}</h5>
-                        <button>Open Book</button>
+                        <Link to={`/book/${book.id}`}>
+                            <button>Open Book</button>
+                        </Link>
                     </div>
-                    </Link>
+                    
                 );
             })}
+            
             </div>
         </div>
-    );
+
+        
+    );  
+
 }
 
-export default BookList;
+const mapStateToProps = (state) =>{ return {bookList: state} }
+
+export default connect(mapStateToProps)(BookList);

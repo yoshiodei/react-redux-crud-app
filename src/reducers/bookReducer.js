@@ -1,17 +1,8 @@
-import Nav from "./Components/Nav";
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import BookList from "./Components/BookList";
-import { useState } from 'react';
-import AddBook from "./Components/AddBook";
-import Book from "./Components/Book";
-import Footer from "./Components/Footer";
-import EditBook from "./Components/EditBook";
+import { ADD_BOOK } from './../actions/addBook';
+import { EDIT_BOOK } from './../actions/editBook';
+import { REMOVE_BOOK } from './../actions/removeBook';
 
-
-
-function App() {
-  
-  const [bookList, setBookList] = useState({
+let initialState = {
     books : [
       {
         title: "The Origin Of Life",
@@ -62,46 +53,22 @@ function App() {
         id: 8
       },
     ]
-  });
+  };
 
-  
-
-  const addNewBook = (newBook) => {
-    setBookList({ books: [ ...bookList.books, newBook]});
-  }
-
-  const removeBook = (id) => {
-    let newBookList = bookList.books.filter(book => book.id != id);
-    setBookList({ books: [ ...newBookList ]});
-  }
-
-  const editBook = (editedBook,id) => {
-     let editedBookList = bookList.books.map(book => book.id == id ? editedBook : book);
-     setBookList({ books: [ ...editedBookList ]})
-  }
-
-  return (
-    <div className="App">
-      <Router>
-        <Nav />
-        <Switch>
-          <Route path="/" exact>
-            <BookList />
-          </Route>
-          <Route path="/create" exact>
-            <AddBook />
-          </Route>
-          <Route path="/book/:id" exact>
-            <Book />
-          </Route>
-          <Route path="/edit/:id" exact>
-            <EditBook />
-          </Route>
-        </Switch>
-      </Router>
-      
-    </div>
-  );
+const bookReducer = (state = initialState, action) => {
+    switch(action.type){
+        case ADD_BOOK:
+            return ({ books: [ ...state.books, action.payload]});
+        case EDIT_BOOK:
+            let editedBookList = state.books.map(book => book.id == action.bookId ? action.payload : book);
+            return console.log("books", editedBookList);
+            // ({ books: [ ...editedBookList ]});
+        case REMOVE_BOOK:
+            let newBookList = state.books.filter(book => book.id != action.payload);
+            return ({ books: [ ...newBookList ]});    
+        default:
+            return state;    
+    }
 }
 
-export default App;
+export default bookReducer;
